@@ -13,6 +13,7 @@ import mutagen
 from mutagen.flac import FLAC
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, COMM
+from mutagen.oggvorbis import OggVorbis
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -60,6 +61,8 @@ def get_destination_subfolder(filename):
     audiofile = ID3(filename)
   elif ext == 'flac':
     audiofile = FLAC(filename)
+  elif ext == 'ogg':
+    audiofile = OggVorbis(filename)
   else:
     logging.warning('neither mp3 nor flac, skipping')
     return None
@@ -125,6 +128,7 @@ def transcode_file(source, dest):
 
   assert(dest.split('.')[-1] == 'mp3')
 
+  # XXX: OGG tags don't seem to be copied
   cmd = ['ffmpeg', '-i', source, '-q:a', '1', dest, '-y']
   logging.info('%s -> TRANSCODE -> %s' % (os.path.basename(source), dest))
 
